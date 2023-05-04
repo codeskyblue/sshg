@@ -5,7 +5,7 @@ description = "ssh from config with arrow select support"
 authors = ["codeskyblue <codeskyblue@gmail.com>"]
 license = "MIT"
 readme = "README.md"
-
+homepage = "https://github.com/codeskyblue/sshg"
 
 [tool.poetry-dynamic-versioning]
 enable = true
