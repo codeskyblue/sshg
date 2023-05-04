@@ -1,0 +1,8 @@
+[run]
+omit = tests/*
+
+exclude_lines =
+    # exclude debug statements
+    print\(
+    # exclude code that raises NotImplementedError
+    raise NotImplementedError
