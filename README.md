@@ -71,11 +71,13 @@ poetry self add "poetry-dynamic-versioning[plugin]"
 poetry publish --build
 ```
 
+
 # Refs
 - https://poetry.eustace.io/docs/
 - https://pypi.org/project/poetry-dynamic-versioning/
 - https://github.com/yinheli/sshw UI风格基本都是参考这个项目
 - https://github.com/WqyJh/sshx 本来用这个名字的，发现跟它重复了
+- https://packaging.python.org/en/latest/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/ 如何使用Github Actions发布
 
 # LICENSE
 [MIT](LICENSE)
