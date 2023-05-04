@@ -24,6 +24,7 @@ sshg = "sshg:main"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.2.0"
+pytest-cov = "^2"
 
 [build-system]
 requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning"]
