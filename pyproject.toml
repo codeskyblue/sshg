@@ -1,0 +1,31 @@
+[tool.poetry]
+name = "sshg"
+version = "0.1.0"
+description = "ssh from config with arrow select support"
+authors = ["codeskyblue <codeskyblue@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+
+[tool.poetry-dynamic-versioning]
+enable = true
+
+[tool.poetry.dependencies]
+python = "^3.8"
+Jinja2 = "^3.1.2"
+requests = "*"
+dataclasses-json = "*"
+pyyaml = "*"
+prompt_toolkit = "*"
+pexpect = "*"
+
+[tool.poetry.scripts]
+gen_supervisor_conf = "py3toolkit.gen_supervisor_conf:main"
+sshx = "py3toolkit.sshg:main"
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.2.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning"]
+build-backend = "poetry_dynamic_versioning.backend"
