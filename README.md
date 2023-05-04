@@ -23,8 +23,8 @@ pip install sshg
   host: 192.168.8.35
   port: 22
   password: 123456 # login password
-  gateway:
-    user: gateway-server
+  via:
+    user: via-server
     host: 10.0.0.38
     port: 2222
 - name: dev server fully configured

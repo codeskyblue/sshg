@@ -20,8 +20,7 @@ prompt_toolkit = "*"
 pexpect = "*"
 
 [tool.poetry.scripts]
-gen_supervisor_conf = "py3toolkit.gen_supervisor_conf:main"
-sshg = "py3toolkit.sshg:main"
+sshg = "sshg:main"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.2.0"
