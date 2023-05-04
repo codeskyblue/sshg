@@ -2,6 +2,9 @@
 先说为什么起这个名字呢？
 因为我之前起的几个名字sshx, sshs 都被别人捷足先登了，而且项目写的还不错。可他们的项目又不能满足我快速选择要连接的设备和远程配置的需求，所以我就只起sshg这个名字了
 
+[![codecov](https://codecov.io/gh/codeskyblue/sshg/branch/master/graph/badge.svg?token=RUS38DVMCR)](https://codecov.io/gh/codeskyblue/sshg)
+[![PyPI version](https://badge.fury.io/py/sshg.svg)](https://badge.fury.io/py/sshg)
+
 ## 支持的功能
 - [x] 支持将ip,user,password写入到配置文件中，并快速的键盘选择上下选择功能(VIM的hj也支持)
 - [x] 支持ssh跳板机的功能
@@ -9,7 +12,7 @@
 
 ## 安装
 ```bash
-pip install sshg
+pip3 install sshg
 ```
 
 ## 使用
