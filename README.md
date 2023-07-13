@@ -69,6 +69,9 @@ $ sshg --conf ~/.sshg.yml
 
 poetry self add "poetry-dynamic-versioning[plugin]"
 poetry publish --build
+
+# 进入到项目的虚拟环境
+poetry shell
 ```
 
 

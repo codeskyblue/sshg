@@ -234,10 +234,13 @@ class SelectContainer(HSplit):
         host_windows = []
         for index, config in enumerate(self._host_configs):
             prefix = "" if config.children else f" <gray>{config.user}@{config.host}</gray>"
+            name = config.name
+            if config.children:
+                name = f"+ {name}({len(config.children)})"
             if self._active_index == index:
-                html_text = "  ➤ " + f"<name>{config.name}</name>" + prefix
+                html_text = "  ➤ " + f"<name>{name}</name>" + prefix
             else:
-                html_text = "    " + f"<gray>{config.name}</gray>" + prefix
+                html_text = "    " + f"<gray>{name}</gray>" + prefix
             if config.children:
                 html_text = f"<b>{html_text}</b>"
             host_windows.append(Window(content=FormattedTextControl(HTML(html_text)), height=1))
