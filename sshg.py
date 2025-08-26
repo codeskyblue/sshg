@@ -176,6 +176,7 @@ def spawn_ssh(host_config: HostConfig, is_local: bool = True, ssh_client: pxssh.
                 port=host_config.port,
                 ssh_key=keypath,
                 quiet=False,
+                original_prompt='[#$%]',
                 sync_original_prompt=False,
                 auto_prompt_reset=reset_prompt)
     else:
