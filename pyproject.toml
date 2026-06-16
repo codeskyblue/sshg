@@ -18,11 +18,12 @@ dataclasses-json = "*"
 pyyaml = "*"
 prompt_toolkit = "*"
 pexpect = "*"
+cryptography = "<43"
 
 [tool.poetry.scripts]
 sshg = "sshg:main"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 pytest = "^7.2.0"
 pytest-cov = "^2"
 

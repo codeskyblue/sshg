@@ -96,6 +96,11 @@ class HostConfig(DataClassJsonMixin):
     via: typing.Optional["HostConfig"] = make_field(mm_field=fields.Field(), default=None)
     _parent: typing.Optional["HostConfig"] = make_field(mm_field=fields.Field(), default=None, init=False, repr=False)
 
+    def get_password(self) -> str:
+        if isinstance(self.password, int):
+            return str(self.password)
+        return self.password or ""
+    
     def post_load(self):
         if self._parent:
             if not self.user:
@@ -151,6 +156,37 @@ class HostConfig(DataClassJsonMixin):
             s.interact()
 
 
+def _resolve_key_passphrase(keypath: pathlib.Path) -> str:
+    """Try loading key without passphrase, prompt until correct if needed."""
+    from cryptography.hazmat.primitives.serialization import load_pem_private_key, load_ssh_private_key
+
+    key_data = keypath.read_bytes()
+
+    def _try_load(password: bytes | None) -> bool:
+        try:
+            load_ssh_private_key(key_data, password=password)
+            return True
+        except TypeError:
+            return False
+        except ValueError as e:
+            if "password" in str(e).lower():
+                return False
+            try:
+                load_pem_private_key(key_data, password=password)
+                return True
+            except (TypeError, ValueError) as e:
+                return False
+
+    if _try_load(None):
+        return ""
+
+    while True:
+        password = getpass.getpass(f"Enter passphrase for key {keypath}: ")
+        if _try_load(password.encode()):
+            return password
+        print("Wrong passphrase, try again.")
+
+
 def spawn_ssh(host_config: HostConfig, is_local: bool = True, ssh_client: pxssh.pxssh = None, reset_prompt: bool = None) -> pxssh.pxssh:
     # https://pexpect.readthedocs.io/en/stable/api/pxssh.html
     cmdargs = host_config.build_cmdargs()
@@ -164,6 +200,8 @@ def spawn_ssh(host_config: HostConfig, is_local: bool = True, ssh_client: pxssh.
         if keypath.stat().st_mode & 0o077 != 0:
             print("Warning: keypath mode change to 0600")
             keypath.chmod(0o600)
+        if not host_config.get_password():
+            host_config.password = _resolve_key_passphrase(keypath)
 
     s.SSH_OPTS += " -o StrictHostKeyChecking=no"
     if reset_prompt is None:
@@ -172,7 +210,7 @@ def spawn_ssh(host_config: HostConfig, is_local: bool = True, ssh_client: pxssh.
     if is_local:
         s.login(host_config.host,
                 username=host_config.user,
-                password=host_config.password,
+                password=host_config.get_password(),
                 port=host_config.port,
                 ssh_key=keypath,
                 quiet=False,
@@ -182,7 +220,7 @@ def spawn_ssh(host_config: HostConfig, is_local: bool = True, ssh_client: pxssh.
     else:
         s.login(host_config.host,
                 username=host_config.user,
-                password=host_config.password,
+                password=host_config.get_password(),
                 port=host_config.port,
                 ssh_key=keypath,
                 quiet=False,
