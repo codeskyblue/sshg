@@ -162,27 +162,33 @@ def _resolve_key_passphrase(keypath: pathlib.Path) -> str:
 
     key_data = keypath.read_bytes()
 
-    def _try_load(password: bytes | None) -> bool:
-        try:
-            load_ssh_private_key(key_data, password=password)
-            return True
-        except TypeError:
-            return False
-        except ValueError as e:
-            if "password" in str(e).lower():
-                return False
+    def _try_load(password: typing.Optional[bytes]) -> typing.Optional[bool]:
+        """Return True if the key loads, False if a passphrase is required/incorrect, None if the key is invalid."""
+        errors: typing.List[Exception] = []
+        for loader in (load_ssh_private_key, load_pem_private_key):
             try:
-                load_pem_private_key(key_data, password=password)
+                loader(key_data, password=password)
                 return True
             except (TypeError, ValueError) as e:
-                return False
+                errors.append(e)
 
-    if _try_load(None):
+        msg = " ".join(str(e).lower() for e in errors)
+        if any(k in msg for k in ("password", "passphrase", "bad decrypt", "incorrect")):
+            return False
+        return None
+
+    res = _try_load(None)
+    if res is None:
+        raise ValueError(f"Unsupported or invalid private key: {keypath}")
+    if res:
         return ""
 
     while True:
         password = getpass.getpass(f"Enter passphrase for key {keypath}: ")
-        if _try_load(password.encode()):
+        res = _try_load(password.encode())
+        if res is None:
+            raise ValueError(f"Unsupported or invalid private key: {keypath}")
+        if res:
             return password
         print("Wrong passphrase, try again.")
 
